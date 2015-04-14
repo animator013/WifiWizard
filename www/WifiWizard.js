@@ -43,10 +43,10 @@ var WifiWizard = {
                 // Other parameters can be added depending on algorithm.
             };
         }
-        else if (algorithm === 'New network type') {
+        else if (algorithm === 'WEP') {
             wifiConfig.auth = {
-                algorithm : algorithm
-                // Etc...
+                algorithm : algorithm,
+                password : password
             };
         }
         else {

@@ -157,10 +157,35 @@ public class WifiWizard extends CordovaPlugin {
                 return true;
             }
             else if (authType.equals("WEP")) {
-                // TODO: connect/configure for WEP
-                Log.d(TAG, "WEP unsupported.");
-                callbackContext.error("WEP unsupported");
-                return false;
+                String newSSID = data.getString(0);
+                wifi.SSID = newSSID;
+                wifi.status = WifiConfiguration.Status.ENABLED;
+                wifi.allowedKeyManagement.set(WifiConfiguration.KeyMgmt.NONE);
+                wifi.allowedProtocols.set(WifiConfiguration.Protocol.RSN);
+                wifi.allowedProtocols.set(WifiConfiguration.Protocol.WPA);
+                wifi.allowedAuthAlgorithms.set(WifiConfiguration.AuthAlgorithm.OPEN);
+                wifi.allowedAuthAlgorithms.set(WifiConfiguration.AuthAlgorithm.SHARED);
+                wifi.allowedPairwiseCiphers.set(WifiConfiguration.PairwiseCipher.CCMP);
+                wifi.allowedPairwiseCiphers.set(WifiConfiguration.PairwiseCipher.TKIP);
+                wifi.allowedGroupCiphers.set(WifiConfiguration.GroupCipher.WEP40);
+                wifi.allowedGroupCiphers.set(WifiConfiguration.GroupCipher.WEP104);
+                String newPass = data.getString(2);
+                wifi.wepKeys[0] = newPass;
+                wifi.wepTxKeyIndex = 0;
+
+                wifi.networkId = ssidToNetworkId(newSSID);
+
+                if ( wifi.networkId == -1 ) {
+                    wifiManager.addNetwork(wifi);
+                    callbackContext.success(newSSID + " successfully added.");
+                }
+                else {
+                    wifiManager.updateNetwork(wifi);
+                    callbackContext.success(newSSID + " successfully updated.");
+                }
+
+                wifiManager.saveConfiguration();
+                return true;
             }
             else if (authType.equals("NONE")) {
                 String newSSID = data.getString(0);
