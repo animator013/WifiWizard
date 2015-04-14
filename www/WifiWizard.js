@@ -127,9 +127,10 @@ var WifiWizard = {
                 case 'NONE':
                     networkInformation.push('NONE');
                 break;
-                case 'Newly supported type':
-                    // Push values in specific order, and implement new type in the Java code.
-                    break;
+                case 'WEP':
+                    networkInformation.push('WEP');
+                    networkInformation.push(wifi.auth.password);
+                break;
                 default:
                     console.log("WifiWizard: authentication invalid.");
             }
